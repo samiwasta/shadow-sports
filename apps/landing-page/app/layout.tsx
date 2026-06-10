@@ -1,10 +1,19 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google"
+import { Barlow, Barlow_Condensed, Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@workspace/ui/lib/utils";
+import { cn } from "@workspace/ui/lib/utils"
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'})
+const barlow = Barlow({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
+})
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  weight: ["500", "600", "700"],
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -20,11 +29,14 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "dark antialiased font-sans",
+        barlow.variable,
+        barlowCondensed.variable,
+        fontMono.variable,
+      )}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   )
 }
