@@ -233,7 +233,7 @@ function Section1({ scrollYProgress }: SectionProps) {
           className="mt-8 flex flex-wrap items-center justify-center gap-4"
         >
           <motion.a
-            href="#join"
+            href="/join"
             whileHover={{
               scale: 1.06,
               boxShadow: "0 0 40px rgba(255,255,255,0.25)",
