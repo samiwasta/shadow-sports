@@ -209,6 +209,8 @@ function generateChunkPlacements(
 
   for (let i = 0; i < photoCount; i++) {
     const photo = TEAM_PHOTOS[Math.floor(random() * TEAM_PHOTOS.length)]
+    if (!photo) continue
+
     let added = false
 
     for (let tier = 0; tier < 3 && !added; tier++) {
@@ -421,6 +423,8 @@ export default function PhotoWallCanvas() {
 
     for (const key of [...generated]) {
       const [cx, cy] = key.split(",").map(Number)
+      if (cx === undefined || cy === undefined) continue
+
       if (
         Math.abs(cx - centerCx) > PRUNE_DISTANCE ||
         Math.abs(cy - centerCy) > PRUNE_DISTANCE

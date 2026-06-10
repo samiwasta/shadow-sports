@@ -124,6 +124,6 @@ export function usePageReady() {
   return {
     isReady,
     progress,
-    status: STATUS_MESSAGES[statusIndex],
+    status: STATUS_MESSAGES[statusIndex] ?? STATUS_MESSAGES[0],
   }
 }
