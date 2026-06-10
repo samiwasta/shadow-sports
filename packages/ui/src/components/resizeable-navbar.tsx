@@ -102,8 +102,8 @@ export const Navbar = ({ children, className }: NavbarProps) => {
 export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   const isClient = useIsClient();
   const classNames = cn(
-    "relative z-60 mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-transparent px-4 py-2 lg:flex dark:bg-transparent",
-    visible && "bg-white/80 dark:bg-neutral-950/80",
+    "relative z-60 mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full border border-white/10 bg-neutral-950/45 px-4 py-2 backdrop-blur-xl lg:flex dark:bg-neutral-950/45",
+    visible && "border-white/15 bg-neutral-950/70 dark:bg-neutral-950/70",
     className,
   );
 
@@ -119,12 +119,12 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
     <motion.div
       initial={false}
       animate={{
-        backdropFilter: visible ? "blur(10px)" : "none",
+        backdropFilter: "blur(14px)",
         boxShadow: visible
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
           : "none",
         width: visible ? "40%" : "100%",
-        y: visible ? 20 : 0,
+        y: visible ? 28 : 16,
       }}
       transition={{
         type: "spring",
@@ -141,6 +141,22 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   );
 };
 
+function scrollToHash(link: string) {
+  const hash = link.startsWith("/#")
+    ? link.slice(1)
+    : link.startsWith("#")
+      ? link
+      : null;
+
+  if (!hash) return false;
+
+  const target = document.querySelector(hash);
+  if (!target) return false;
+
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+  return true;
+}
+
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
 
@@ -155,7 +171,12 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => (
         <a
           onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
+          onClick={(event) => {
+            if (scrollToHash(item.link)) {
+              event.preventDefault();
+            }
+            onItemClick?.();
+          }}
           className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
           key={`link-${idx}`}
           href={item.link}
@@ -176,8 +197,8 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
 export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   const isClient = useIsClient();
   const classNames = cn(
-    "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-transparent px-0 py-2 lg:hidden",
-    visible && "bg-white/80 dark:bg-neutral-950/80",
+    "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between rounded-full border border-white/10 bg-neutral-950/45 px-3 py-2 backdrop-blur-xl lg:hidden dark:bg-neutral-950/45",
+    visible && "border-white/15 bg-neutral-950/70 dark:bg-neutral-950/70",
     className,
   );
 
@@ -189,7 +210,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
     <motion.div
       initial={false}
       animate={{
-        backdropFilter: visible ? "blur(10px)" : "none",
+        backdropFilter: "blur(14px)",
         boxShadow: visible
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
           : "none",
@@ -197,7 +218,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         paddingRight: visible ? "12px" : "0px",
         paddingLeft: visible ? "12px" : "0px",
         borderRadius: visible ? "4px" : "2rem",
-        y: visible ? 20 : 0,
+        y: visible ? 28 : 16,
       }}
       transition={{
         type: "spring",
@@ -268,7 +289,7 @@ export const MobileNavMenu = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className={cn(
-              "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-white px-4 py-8 shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] dark:bg-neutral-950",
+              "absolute inset-x-0 top-20 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg border border-white/10 bg-neutral-950/90 px-4 py-8 shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] backdrop-blur-xl dark:bg-neutral-950/90",
               className,
             )}
           >
@@ -297,7 +318,7 @@ export const MobileNavToggle = ({
 export const NavbarLogo = () => {
   return (
     <a
-      href="#"
+      href="/"
       className="group relative z-20 mr-4 flex items-center gap-2.5 px-2 py-1"
     >
       <span

@@ -1,7 +1,11 @@
+import type { Metadata } from "next"
 import { Barlow, Barlow_Condensed, Geist_Mono } from "next/font/google"
 
+import { rootMetadata } from "@/lib/site-metadata"
 import "@workspace/ui/globals.css"
 import { cn } from "@workspace/ui/lib/utils"
+
+export const metadata: Metadata = rootMetadata
 
 const barlow = Barlow({
   subsets: ["latin"],

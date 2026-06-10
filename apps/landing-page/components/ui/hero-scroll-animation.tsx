@@ -12,6 +12,7 @@ import {
 import Image from "next/image"
 import { useRef, useSyncExternalStore } from "react"
 
+import { ImageTrail } from "@/components/ui/image-trail"
 import { cn } from "@workspace/ui/lib/utils"
 
 function useIsClient() {
@@ -33,6 +34,25 @@ const clubStats = [
   { label: "Active Players", value: "20+" },
   { label: "Matches Played", value: "50+" },
   { label: "Club Seasons", value: "6" },
+]
+
+const heroTrailImages = [
+  {
+    src: "/team-1.jpeg",
+    alt: "Shadow Sports cricket team at Belapur Terminal",
+  },
+  {
+    src: "/team-2.jpg",
+    alt: "Shadow Sports cricket team celebrating with the trophy",
+  },
+  {
+    src: "/team-3.jpg",
+    alt: "Shadow Sports batsman playing a shot",
+  },
+  {
+    src: "/team-4.jpg",
+    alt: "Shadow Sports cricketer in batting stance at the nets",
+  },
 ]
 
 const photoWallImages = [
@@ -95,6 +115,19 @@ function Section1({ scrollYProgress }: SectionProps) {
   const contentY = useTransform(smoothY, [-0.5, 0.5], [-8, 8])
 
   function handleMouseMove(event: React.MouseEvent<HTMLElement>) {
+    const navbar = document.getElementById("site-navbar")
+    if (navbar) {
+      const navRect = navbar.getBoundingClientRect()
+      if (
+        event.clientY >= navRect.top &&
+        event.clientY <= navRect.bottom &&
+        event.clientX >= navRect.left &&
+        event.clientX <= navRect.right
+      ) {
+        return
+      }
+    }
+
     const rect = sectionRef.current?.getBoundingClientRect()
     if (!rect) return
 
@@ -127,6 +160,25 @@ function Section1({ scrollYProgress }: SectionProps) {
         className="pointer-events-none absolute right-1/4 -bottom-16 size-96 rounded-full bg-blue-500/15 blur-[120px]"
       />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(59,130,246,0.12),transparent_55%)]" />
+
+      <div className="pointer-events-none absolute inset-0 z-[5]">
+        <ImageTrail containerRef={sectionRef} interval={110} rotationRange={14}>
+          {heroTrailImages.map((image) => (
+            <div
+              key={image.src}
+              className="relative h-24 w-24 overflow-hidden rounded-lg border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={96}
+                height={96}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ))}
+        </ImageTrail>
+      </div>
 
       <motion.div
         style={{ x: contentX, y: contentY }}
@@ -192,7 +244,7 @@ function Section1({ scrollYProgress }: SectionProps) {
             Join the Club
           </motion.a>
           <motion.a
-            href="#photo-wall"
+            href="/photo-wall"
             whileHover={{
               scale: 1.06,
               borderColor: "rgba(96,165,250,0.6)",
@@ -322,17 +374,9 @@ function HeroScrollAnimation() {
   }
 
   return (
-    <main ref={container} className="relative h-[200vh] bg-black">
+    <main ref={container} className="relative min-h-[200vh] bg-black">
       <Section1 scrollYProgress={scrollYProgress} />
       <Section2 scrollYProgress={scrollYProgress} />
-      <footer className="group bg-black">
-        <h2 className="font-heading translate-y-16 text-center text-[14vw] leading-none font-semibold tracking-tight text-neutral-800 uppercase transition-all ease-linear group-hover:text-neutral-700 md:text-[12vw]">
-          Shadow Sports
-        </h2>
-        <div className="relative z-10 grid h-40 place-content-center rounded-t-full bg-neutral-950 text-sm text-muted-foreground">
-          Built for cricketers who play for the badge.
-        </div>
-      </footer>
     </main>
   )
 }
